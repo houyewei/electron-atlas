@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="atlasApp">
+  <head>
+    <meta charset="UTF-8">
+    <title>Atlas Controller</title>
+    <link href="./vender/bootstrap-4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://rawgit.com/rzajac/angularjs-slider/master/dist/rzslider.css" rel="stylesheet">
+    <script src="./vender/angular/angular.min.js"></script>
+    <script src="https://rawgit.com/rzajac/angularjs-slider/master/dist/rzslider.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  </head>
+  <body ng-controller="atlasController">
+    <div class="container-fluid">
+      <div class="row col-md-12">
+        <h1>Click to controll atlas</h1>
+      </div>
+      <!-- All of the Node.js APIs are available in this renderer process. -->
+      <div class="row col-md-12">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" ng-click="goPrep()" class="btn btn-secondary" ng-class="behavior == 'prep' ? 'active': ''">Prep</button>
+          <button type="button" ng-click="goStand()" class="btn btn-secondary" ng-class="behavior == 'stand' ? 'active': ''">Stand</button>
+          <button type="button" ng-click="goManipulate()" class="btn btn-secondary" ng-class="behavior == 'manipulate' ? 'active': ''">Manipulate</button>
+          <button type="button" ng-click="goWalk()" class="btn btn-secondary" ng-class="behavior == 'walk' ? 'active': ''">Walk</button>
+          <button type="button" ng-click="goSlightMove()" class="btn btn-secondary" ng-class="behavior == 'slightmove' ? 'active': ''">SlightMove</button>
+        </div>
+      </div>
+      <div class="row col-md-12">
+        <!--{{result.subscribers}}-->
+
+        <label>Stamp:</label><label>{{pose.header.stamp.nsecs}}</label>
+      </div>
+      <div class="row col-md-12">
+        <label>{{pose.header.stamp.secs}}</label>
+      </div>
+      <div class="row col-md-12">
+        <label>Angular_Velocity:</label><label>{{pose.angular_velocity}}</label>
+      </div>
+      <div class="row col-md-12">
+        <label>Position:</label>
+      </div>
+      <div class="row col-md-12">
+        <div ng-repeat="position in pose.position track by $index" class="col-md-3">
+          <label>{{$index}} {{joints[$index]}}</label>
+          <rzslider  rz-slider-options-id="{{$index}}"
+            rz-slider-model="position"
+            rz-slider-options="slider.options"></rzslider>
+        </div>
+      </div>
+
+      We are using Node.js <script>document.write(process.versions.node)</script>,
+      Chromium <script>document.write(process.versions.chrome)</script>,
+      and Electron <script>document.write(process.versions.electron)</script>.
+    </div>
+  </body>
+
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+</html>
