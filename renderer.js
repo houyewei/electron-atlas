@@ -21,6 +21,7 @@ int32 behavior                # can be one of
 */
 
 var atlasApp = angular.module('atlasApp', ['rzModule']);
+
 var joints = ['back_bkz', 'back_bky','back_bkx', 'neck_ry',
 'l_leg_hpz','l_leg_hpx','l_leg_hpy',
 'l_leg_kny',
@@ -40,12 +41,21 @@ var joints = ['back_bkz', 'back_bky','back_bkx', 'neck_ry',
 'l_arm_wrx',
 'r_arm_shz',
 'r_arm_shx',
-' r_arm_ely ',
-' r_arm_elx',
+'r_arm_ely',
+'r_arm_elx',
 'r_arm_wry',
 'r_arm_wrx'];
+
+/*
+var joints = ['l_leg_hpz', 'l_leg_hpx', 'l_leg_hpy', 'l_leg_kny', 'l_leg_aky', 'l_leg_akx', 'r_leg_hpz',
+'r_leg_hpx', 'r_leg_hpy', 'r_leg_kny', 'r_leg_aky', 'r_leg_akx', 'l_arm_shz', 'l_arm_shx',
+'l_arm_ely', 'l_arm_elx', 'l_arm_wry', 'l_arm_wrx', 'l_arm_wry2', 'r_arm_shz', 'r_arm_shx',
+'r_arm_ely', 'r_arm_elx','r_arm_wry', 'r_arm_wrx', 'r_arm_wry2', 'neck_ry', 'back_bkz',
+'back_bky', 'back_bkx'];
+*/
 // Define the `PhoneListController` controller on the `phonecatApp` module
 atlasApp.controller('atlasController', function PhoneListController($scope) {
+  $scope.title = 'Click to controll atlas';
   $scope.position = {minAge: 10, maxAge: 20};
   $scope.joints = joints;
   rosnodejs.initNode('/my_node', { onTheFly: true }).then(function (rosNode) {
@@ -92,7 +102,8 @@ atlasApp.controller('atlasController', function PhoneListController($scope) {
             0, 0, 0 ,0, 0, 0, 0,
             0, 0, 0 ,0, 0, 0, 0,
             0, 0, 0 ,0, 0, 0, 0]
-          slight_movement_msg.kp_position = [20.0, 4000.0, 2000.0, 20.0, 5.0, 100.0, 2000.0, 1000.0, 900.0, 300.0, 5.0, 100.0, 2000.0, 1000.0, 900.0, 300.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0]
+          slight_movement_msg.kp_position = [20.0, 4000.0, 2000.0, 20.0, 5.0, 100.0, 2000.0, 1000.0, 900.0, 300.0, 5.0, 100.0, 2000.0,
+            1000.0, 900.0, 300.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0]
           slight_movement_msg.ki_position = [0, 0, 0 ,0, 0, 0, 0,
             0, 0, 0 ,0, 0, 0, 0,
             0, 0, 0 ,0, 0, 0, 0,
@@ -234,7 +245,8 @@ atlasApp.controller('atlasController', function PhoneListController($scope) {
         0, 0, 0 ,0, 0, 0, 0,
         0, 0, 0 ,0, 0, 0, 0,
         0, 0, 0 ,0, 0, 0, 0]
-      slight_movement_msg.kp_position = [20.0, 4000.0, 2000.0, 20.0, 5.0, 100.0, 2000.0, 1000.0, 900.0, 300.0, 5.0, 100.0, 2000.0, 1000.0, 900.0, 300.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0]
+      slight_movement_msg.kp_position = [20.0, 4000.0, 2000.0, 20.0, 5.0, 100.0, 2000.0, 1000.0, 900.0, 300.0, 5.0, 100.0, 2000.0,
+        1000.0, 900.0, 300.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0, 2000.0, 1000.0, 200.0, 200.0, 50.0, 100.0]
       slight_movement_msg.ki_position = [0, 0, 0 ,0, 0, 0, 0,
         0, 0, 0 ,0, 0, 0, 0,
         0, 0, 0 ,0, 0, 0, 0,
@@ -277,12 +289,11 @@ atlasApp.controller('atlasController', function PhoneListController($scope) {
 
     // get list of existing publishers, subscribers, and services
     rosNode._node._masterApi.getSystemState("/my_node").then(function (data) {
-      //console.log("getSystemState, result", data, data.publishers);
+      console.log("getSystemState, result", data, data.publishers);
       $scope.result = data;
       $scope.rosNode = rosNode;
       $scope.$apply();
       return data;
-
     })
 
     rosNode.subscribe('/atlas/atlas_state', 'atlas_msgs/AtlasState', function (data) {
@@ -298,5 +309,7 @@ atlasApp.controller('atlasController', function PhoneListController($scope) {
         $scope.$apply();
       }, {queueSize: 1,
         throttleMs: 1000 });
+  }, function(error){
+    console.log(error)
   })
 });
